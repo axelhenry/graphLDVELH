@@ -10,9 +10,9 @@ python3,
 
 graph-tools (see : http://graph-tool.skewed.de/),
 
-beautifulSoup4 (pip install beautifulsoup4),
+beautifulSoup4 (pip install beautifulsoup4, http://www.crummy.com/software/BeautifulSoup/bs4/doc/),
 
-tarjan (pip install tarjan)
+tarjan (pip install tarjan, see https://github.com/bwesterb/py-tarjan)
 
 doesn't support filepath with special characters, so keep it simple :)
 
