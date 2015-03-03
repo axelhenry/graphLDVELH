@@ -8,9 +8,9 @@ to use this script, you'll need :
 
 python3, 
 
-graph-tools (see : http://graph-tool.skewed.de/),
+graph-tool (see : http://graph-tool.skewed.de/),
 
-beautifulSoup4 (pip install beautifulsoup4, http://www.crummy.com/software/BeautifulSoup/bs4/doc/),
+beautifulSoup4 (pip install beautifulsoup4, see http://www.crummy.com/software/BeautifulSoup/bs4/doc/),
 
 tarjan (pip install tarjan, see https://github.com/bwesterb/py-tarjan)
 
