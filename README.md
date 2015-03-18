@@ -1,33 +1,37 @@
 # graphLDVELH
 
-usage:
+##Goal:
 
-./launcher4XmlFile.py -f /path/to/xml_file -of /path/to/output/graph/file -cf /path/to/output/cycle/txt/file
+ Providing visual representation of a LDVELH (livre dont vous êtes le héros) as a directed graph and highlighting cycles in it.
 
-to use this script, you'll need : 
+##Usage:
+
+./launcher4XmlFile.py -f /path/to/xml_file -ogf /path/to/output/graph/svg_file -ocf /path/to/output/cycle/txt/file
+
+##Dependencies:
+
+To use this script, you'll need : 
 - python3 
 - beautifulSoup4 (pip install beautifulsoup4, see http://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 - tarjan (pip install tarjan, see https://github.com/bwesterb/py-tarjan)
 - python-graph (should be available in your package manager, see https://github.com/pmatiello/python-graph)
-
-graph-tool (see : http://graph-tool.skewed.de/),
-
-
+  - you may need pydot as a dependency of python-graph instead of python-dot
+- graphviz (should be available in your package manager)
 
 
+##Sidenotes:
 
-doesn't support filepath with special characters, so keep it simple :)
+- doesn't support filepath with special characters, so keep it simple :)
+- legends are implemented in our graph, but a little reminder never hurt so :
+  - Red node : certainty of death
+  - Orange node : possibility of death, watch your steps
+  - Yellow node : you might encounter ennemies on this paragraph, depending on your actions
+  - Green node : the start of your adventure
+  - Purple edge : nodes linked are part of a cycle in your graph
 
-legends aren't implemented yet on our graph, so there is our used color code :
+##Thanks to:
+- python-graph's developers
+- bwesterb for his implementation of Tarjan's algorithm
+- Mathias Laurin for find_all_cycles.py
 
-RED DOT = certainty of death
 
-ORANGE DOT = possibility of death
-
-YELLOW DOT = you might encounter ennemies on this paragraph, depending on your actions
-
-GREEN DOT = the start of our adventure
-
-BLUE DOT = nothing specific to say about it, standard paragraph, nothing dangerous will happen to you here
-
-PURPLE CIRCLED = part of a cycle
