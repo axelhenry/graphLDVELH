@@ -5,14 +5,16 @@ usage:
 ./launcher4XmlFile.py -f /path/to/xml_file -of /path/to/output/graph/file -cf /path/to/output/cycle/txt/file
 
 to use this script, you'll need : 
-
-python3, 
+- python3 
+- beautifulSoup4 (pip install beautifulsoup4, see http://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+- tarjan (pip install tarjan, see https://github.com/bwesterb/py-tarjan)
+- python-graph (should be available in your package manager, see https://github.com/pmatiello/python-graph)
 
 graph-tool (see : http://graph-tool.skewed.de/),
 
-beautifulSoup4 (pip install beautifulsoup4, see http://www.crummy.com/software/BeautifulSoup/bs4/doc/),
 
-tarjan (pip install tarjan, see https://github.com/bwesterb/py-tarjan)
+
+
 
 doesn't support filepath with special characters, so keep it simple :)
 
