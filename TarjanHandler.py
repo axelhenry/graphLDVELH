@@ -7,9 +7,9 @@ import tarjan
 class TarjanHandler:
 
     def __init__(self, aHash):
-        self.myCycles = self.findOnlyCycles(aHash)
+        self._myStrongConnectedComponents = self._findconnectedComponents(aHash)
 
-    def findOnlyCycles(self, aHash):
+    def _findconnectedComponents(self, aHash):
         tmpCycles = tarjan.tarjan(aHash)
         resultCycles = []
         for item in tmpCycles:
@@ -17,5 +17,5 @@ class TarjanHandler:
                 resultCycles.append(item)
         return resultCycles
 
-    def getCycles(self):
-        return self.myCycles
+    def getComponents(self):
+        return self._myStrongConnectedComponents

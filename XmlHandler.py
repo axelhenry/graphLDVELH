@@ -9,10 +9,10 @@ class XmlHandler:
 
     def __init__(self, aFilePath):
         self.myXmlTree = None
-        self.myHash = {}
-        self.myTarjanHash = {}
+        self._myHash = {}
+        self._myTarjanHash = {}
         if os.path.isfile(aFilePath):
-            self.mySoup = BeautifulSoup.BeautifulSoup(open(aFilePath))
+            self._mySoup = BeautifulSoup.BeautifulSoup(open(aFilePath))
             # self.myXmlTree = parse(aFilePath)
             myParagraphes = self.getParagraphsFromXml()
             self.processParagraphs(myParagraphes)
@@ -20,7 +20,7 @@ class XmlHandler:
     def getParagraphsFromXml(self):
         # return
         # self.myXmlTree.documentElement.getElementsByTagName('paragraphe')
-        return self.mySoup.find_all('paragraphe')
+        return self._mySoup.find_all('paragraphe')
 
     def processParagraph(self, aParagraphe):
         myNumber = aParagraphe['numero']
@@ -58,11 +58,15 @@ class XmlHandler:
         for aParagraphe in someParagraphes:
             tmpHash = self.processParagraph(aParagraphe)
             for key, value in tmpHash.items():
-                self.myHash[key] = value
-                self.myTarjanHash[key] = value['destinations']
+                self._myHash[key] = value
+                myDests = list(value['destinations'])
+                # remove self loops
+                if key in myDests:
+                    myDests.remove(key)
+                self._myTarjanHash[key] = myDests
 
     def getProcessedHash(self):
-        return self.myHash
+        return self._myHash
 
     def getTarjanizedHash(self):
-        return self.myTarjanHash
+        return self._myTarjanHash
