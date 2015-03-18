@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
 
 
-def presentCycles(aList):
-    aString = ''
-    for subList in aList:
-        tmpString = 'Cycle : '
-        tmpString = tmpString + \
-            ''.join(["%s > " % k for k in subList[0:-1]]) + \
-            ''.join(["%s\n" % subList[-1]])
-        aString = aString + tmpString
+def cyclesToString(aListOfCycles):
+    aString = ''.join(["%s cycles in the xml file (variations included).\n"
+                       % len(aListOfCycles)]) + \
+        'Visual representation of these cycles' + \
+        ' could be found in our png file.\n'
+    for aCycle in aListOfCycles:
+        aString = aString + presentCycles('Cycle : ', '>', aCycle)
     return aString
 
 
-def isVertexInCycles(aKey, aList):
-    myList = [aKey in k for k in aList]
-    return isTrueInMyList(myList)
+def presentCycles(aPrefix, aSeparator, aList):
+    # aString = ''
+    # for subList in aList:
+    #     tmpString = aPrefix + ''
+    #     tmpString = tmpString + \
+    #         ''.join(["%s %s " % (k, aSeparator) for k in subList[0:-1]]) + \
+    #         ''.join(["%s\n" % subList[-1]])
+    #     aString = aString + tmpString
+    return aPrefix + ''.join(["%s %s " % (k, aSeparator) for k in aList[0:-1]])\
+        + ''.join(["%s\n" % aList[-1]])
 
 
-def isEdgeInCycles(aStart, aEnd, aList):
-    myList = [aStart in k and aEnd in k for k in aList]
-    return isTrueInMyList(myList)
+def stringifyCycle(aCycle):
+    return ''.join(["%s_" % k for k in aCycle])
 
 
-def isTrueInMyList(aList):
-    if True in aList:
-        return True
-    else:
-        return False
+def flattenList(aList):
+    return [x for l in aList for x in l]
