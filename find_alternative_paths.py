@@ -89,7 +89,7 @@ def decodePath(myTree, myPath):
 
 
 def showTree(myTree, showId):
-    myTree.show(idhidden=showId)
+    myTree.show(idhidden=showId,line_type='ascii')
 
 
 def find_paths(aTree, aElem):
