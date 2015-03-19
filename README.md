@@ -17,6 +17,7 @@ To use this script, you'll need :
 - python-graph (should be available in your package manager, see https://github.com/pmatiello/python-graph)
   - you may need pydot as a dependency of python-graph instead of python-dot
 - graphviz (should be available in your package manager)
+- treelib (pip install treelib, see https://github.com/caesar0301/treelib)
 
 
 ##Sidenotes:
