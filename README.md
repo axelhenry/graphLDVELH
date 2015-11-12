@@ -7,7 +7,7 @@
 ## Installation:
 
 - If you don't have python3 and pip installed on your computer, install it through your package manager.
-- Install python-graph (should be available in your package manager, see https://github.com/pmatiello/python-graph)
+- Install python-graph (should be available in your package manager, or see https://github.com/pmatiello/python-graph)
 - Install graphviz (should be available in your package manager)
 - Clone this repo on your computer.  
 ```bash
