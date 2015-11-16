@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-def cyclesToString(aListOfCycles):
-    aString = ''.join(["%s cycles in the xml file (variations included).\n"
-                       % len(aListOfCycles)]) + \
+def cyclesToString(aListOfCycles, alternativePathsNotProcessed=False):
+    myVariation = 'included' if not alternativePathsNotProcessed else 'excluded'
+    aString = ''.join(["%s cycles in the xml file (variations %s).\n"
+                       % (len(aListOfCycles), myVariation)]) + \
         'Visual representation of these cycles' + \
         ' could be found in our png file.\n'
     for aCycle in aListOfCycles:

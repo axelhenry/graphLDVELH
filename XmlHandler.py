@@ -8,36 +8,23 @@ import bs4 as BeautifulSoup
 class XmlHandler:
 
     def __init__(self, aFilePath):
-        self.myXmlTree = None
         self._myHash = {}
         self._myTarjanHash = {}
         if os.path.isfile(aFilePath):
-            self._mySoup = BeautifulSoup.BeautifulSoup(open(aFilePath))
-            # self.myXmlTree = parse(aFilePath)
+            self._mySoup = BeautifulSoup.BeautifulSoup(open(aFilePath), 'xml')
             myParagraphes = self.getParagraphsFromXml()
             self.processParagraphs(myParagraphes)
 
     def getParagraphsFromXml(self):
-        # return
-        # self.myXmlTree.documentElement.getElementsByTagName('paragraphe')
         return self._mySoup.find_all('paragraphe')
 
     def processParagraph(self, aParagraphe):
         myNumber = aParagraphe['numero']
-        # print('Paragraphe #' + myNumber)
         myList = []
         isDangerous = False
         isDeadlyTrap = False
         isPotentialEnnemies = False
         if not aParagraphe.find('mort'):
-            myDestinations = aParagraphe.find_all('destination')
-            for aDest in myDestinations:
-                # print(aDest)
-                # print(
-                #     'aParagraphe : ' + myNumber
-                #     + ', aDest : ', aDest.getText())
-                myList.append(aDest.getText())
-
             myActions = aParagraphe.find_all('action')
             for anAction in myActions:
                 if anAction.getText() == 'mort':
@@ -49,6 +36,14 @@ class XmlHandler:
                 isPotentialEnnemies = True
         else:
             isDeadlyTrap = True
+        # common processing
+        myDestinations = aParagraphe.find_all('destination')
+        for aDest in myDestinations:
+            # print(aDest)
+            # print(
+            #     'aParagraphe : ' + myNumber
+            #     + ', aDest : ', aDest.getText())
+            myList.append(aDest.getText())
         return {myNumber: {'destinations': myList,
                            'dangerous': isDangerous,
                            'potentialEnnemies': isPotentialEnnemies,

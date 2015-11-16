@@ -10,6 +10,8 @@ import find_alternative_paths
 import pydot
 import utilities
 import constants
+import os
+import find_all_cycles_johnson_iter as johnson
 
 
 class PythonGraphHandler:
@@ -19,39 +21,37 @@ class PythonGraphHandler:
         self._myHashFromXML = aHash
         self._myTarjanHash = aTarjanHash
         self._myStrongComponents = aTarjanComponents
+        self._myEncodingHash, self._myDecodingHash = \
+            self.generateConsecutiveNodesNumberFromGraph(self._myHashFromXML)
         self._myGraph = digraph()
-        # self.myVertexFillColor = self.myGraph.new_vertex_property("string")
-        # self.myVertexColor = self.myGraph.new_vertex_property("string")
-        # self.myEdgeColor = self.myGraph.new_edge_property("string")
-        # self.myVertexDict = self.generateVertex()
         self._generateVertex()
         self._generateEdges()
-        self._myCycles = find_all_cycles.find_all_cycles(self._myGraph)
-        # self.myAltCycles = find_alternative_paths.find_alternative_paths(
-        #     self.myCycles, self.myTarjanHash, self.myStrongComponents)
-        # self.my121Cycles = self._find121Cycle()
-        self._myCycles = self._uniqueCycles([self._myCycles,
-                                             find_alternative_paths.find_alternative_paths(self._myCycles,
-                                                                                           self._myTarjanHash, self._myStrongComponents),
-                                             self._find121Cycle()])
+        self._myCycles = []
         self._myUniqueEdges = self._uniqueEdges(
             self._myCycles, self._myHashFromXML)
-        self._highlightEdges(self._myUniqueEdges)
+        # self._highlightEdges(self._myUniqueEdges)
+        self._highlightEdges(self._getEdgesListFromComponent())
         # self._highlightAllCycles([
         #     self.myCycles, self.myAltCycles, self.my121Cycles])
         self._drawGraph()
 
+    def getGraphCopy(self):
+        myCopy = digraph()
+        myCopy.add_graph(self._myGraph)
+        return myCopy
+
     def _generateEdge(self, aKey):
         myHash = self._myHashFromXML[aKey]
-        if not myHash['fucking deadly trap']:
-            myOriginVertex = aKey
-            for myDest in myHash['destinations']:
-                myDestVertex = myDest
-                try:
-                    self._myGraph.add_edge((myOriginVertex, myDestVertex),
-                                           attrs=[('color', constants.BLACK)])
-                except(AdditionError):
-                    print('edge already in graph')
+        # if not myHash['fucking deadly trap']:
+        myOriginVertex = aKey
+        for myDest in myHash['destinations']:
+            myDestVertex = myDest
+            try:
+                self._myGraph.add_edge((myOriginVertex, myDestVertex),
+                                       attrs=[('color', constants.BLACK)])
+                #self._myRawGraph.add_edge((myOriginVertex, myDestVertex))
+            except(AdditionError):
+                print('edge already in graph')
 
     def _generateEdges(self):
         for aKey in self._myHashFromXML:
@@ -65,7 +65,10 @@ class PythonGraphHandler:
             else:
                 myTmpDict = self._myHashFromXML[aKey]
                 if myTmpDict['fucking deadly trap'] is True:
-                    myNodeColor = constants.RED_DEATH
+                    if not myTmpDict['destinations']:
+                        myNodeColor = constants.RED_DEATH
+                    else:
+                        myNodeColor = constants.ORANGE_DANGER
                     # self.myVertexFillColor[
                     #     self.myGraph.vertex(myDict[aKey])] = self.DEATH
                 elif myTmpDict['dangerous'] is True:
@@ -78,6 +81,7 @@ class PythonGraphHandler:
                 self._myGraph.add_node(
                     aKey, attrs=[('style', 'filled'),
                                  ('fillcolor', myNodeColor)])
+                # self._myRawGraph.add_node(aKey)
             except(AdditionError):
                 print('node already in graph')
 
@@ -104,6 +108,18 @@ class PythonGraphHandler:
                         aEdge, [('color', constants.EDGECYCLE)])
                 except(AdditionError):
                     print('oups')
+
+    def _getEdgesListFromComponent(self):
+        myEdges = set()
+        for component in self._myStrongComponents:
+            #print('component\'s length : ', len(component))
+            for node in component:
+                # myDests =
+                for dest in self._myTarjanHash[node]:
+                    if dest in component:
+                        myEdges.add((node, dest))
+        #print('myEdges length : ', len(myEdges))
+        return myEdges
 
     def _uniqueCycles(self, aCycles):
         myUniqueCycles = {}
@@ -179,23 +195,58 @@ class PythonGraphHandler:
     def _drawGraph(self):
         print('drawing graph, could take some time...')
         dot = write(self._myGraph)
-        # print('dot : ', dot)
         dot = dot.replace('}', self._generateLegend() + '}')
-        # dot = dot.replace('digraph graphname {','digraph graphname {'+self._generateLegend2())
-        # print('processed dot : ', dot)
         graph = pydot.graph_from_dot_data(dot)
-        # print('graph : ', graph.to_string())
-        # graph.write_png(self._filePath)
-        # graph.to_string().replace('digraph graphname {', 'digraph graphname {'+self._generateLegend())
-        # print('graph : ', graph.to_string())
         graph.write_svg(self._filePath)
         print('ending drawing')
-        # gvv = graphviz.readstring(dot)
-        # graphviz.layout(gvv, 'dot')
-        # graphviz.render(gvv, 'png', self.filePath)
 
     def getCycles(self):
         return self._myCycles
+
+    def generateDotfile(self, aFilePath):
+        myString = 'digraph G {\n'
+        myString = myString + \
+            ''.join(["%s;\n" % self._myEncodingHash[node]
+                     for node in self._myGraph.nodes()])
+        myString = myString + ''.join(["%s -> %s;\n" % (self._myEncodingHash[
+                                      edge[0]], self._myEncodingHash[edge[1]]) for edge in self._myGraph.edges()])
+        myString = myString + '}'
+        try:
+            with open(aFilePath, 'w') as myFile:
+                myFile.write(myString)
+        except (OSError, IOError):
+            print('something went wrong with the cycle file')
+
+    def generateTestFile(self, aFilePath):
+        try:
+            with open(aFilePath, 'w') as myFile:
+                myFile.write(
+                    ''.join(["%s -> %s;\n" % (edge[0], edge[1]) for edge in self._myGraph.edges()]))
+        except (OSError, IOError):
+            print('something went wrong with the cycle file')
+
+    def generateConsecutiveNodesNumberFromGraph(self, aHash):
+        myEncodingHash = {}
+        myDecodingHash = {}
+        i = 0
+        for node in aHash:
+            myEncodingHash[node] = i
+            myDecodingHash[i] = node
+            i = i + 1
+        return myEncodingHash, myDecodingHash
+
+    def generateCFile(self, aFilePath):
+        #myNodes = self._myGraph.nodes()
+        myEdges = self._myGraph.edges()
+        myString = "{} {}\n".format(len(self._myEncodingHash), len(myEdges))
+        myString = myString + \
+            ''.join(["%s %s %s\n" % (self._myEncodingHash[edge[0]],
+                                     self._myEncodingHash[edge[1]], 0) for edge in myEdges])
+        try:
+            with open(aFilePath, 'w') as myFile:
+                myFile.write(myString)
+        except (OSError, IOError):
+            print('something went wrong with the cycle file')
 
     def _generateLegend(self):
         myLegend = """
@@ -263,3 +314,36 @@ class PythonGraphHandler:
                                constants.ORANGE_DANGER,
                                constants.RED_DEATH,
                                constants.EDGECYCLE)
+
+    def generateDotFilesForComponents(self, aFolderPath):
+        i = 0
+        for component in self._myStrongComponents:
+            myString = self.generateDotForComponent(component)
+            try:
+                path = os.path.join(os.path.abspath(
+                    aFolderPath), str(i) + '.dot')
+                print('path : ', path)
+                with open(str(i) + '.dot', 'w') as myFile:
+                    myFile.write(myString)
+            except (OSError, IOError):
+                print('something went wrong with the .dot file')
+            i = i + 1
+
+    def generateDotForComponent(self, aComponent):
+        myPrEncHash = {}
+        i = 0
+        for node in aComponent:
+            myPrEncHash[node] = i
+            i = i + 1
+        myString = 'digraph G {\n'
+        myString = myString + \
+            ''.join(["%s;\n" % myPrEncHash[node] for node in aComponent])
+        tab = []
+        for edge in self._myGraph.edges():
+            if edge[0] in aComponent and edge[1] in aComponent:
+                tab.append(edge)
+        myString = myString + \
+            ''.join(["%s -> %s;\n" % (myPrEncHash[edge[0]],
+                                      myPrEncHash[edge[1]]) for edge in tab])
+        myString = myString + '}'
+        return myString
