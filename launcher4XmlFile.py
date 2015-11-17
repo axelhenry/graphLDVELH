@@ -9,18 +9,18 @@ import XmlHandler
 import PythonGraphHandler
 import TarjanHandler
 # import CyclesHandler
-import utilities
+#import utilities
 
 parser = argparse.ArgumentParser(
     description='Generate a graph from a xml file and look for cycle')
 parser.add_argument(
-    '--xml_file', '-f',
+    '--xml_file', '-xml',
     help='path to our input file', required=True)
 parser.add_argument(
-    '--output_cycle_file', '-ocf',
+    '--json_component_file', '-json',
     help='path to our summary of cycles in graph', required=True)
 parser.add_argument(
-    '--output_graph_file', '-ogf',
+    '--svg_graph_file', '-svg',
     help='path to our representation of the graph, in a svg file',
     required=True)
 parser.add_argument('--disable_alternate_paths', '-dap', action='store_true')
@@ -28,10 +28,10 @@ args = parser.parse_args()
 
 if args.xml_file:
     myXmlFile = args.xml_file
-if args.output_graph_file:
-    myOutputFile = args.output_graph_file
-if args.output_cycle_file:
-    myCycleFile = args.output_cycle_file
+if args.svg_graph_file:
+    myOutputFile = args.svg_graph_file
+if args.json_component_file:
+    myCycleFile = args.json_component_file
 
 
 myXmlHandler = XmlHandler.XmlHandler(myXmlFile)
