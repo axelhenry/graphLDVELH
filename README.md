@@ -27,9 +27,9 @@ pip install -r stable-req.txt
 ## Usage:
 
 This script takes 3 arguments:
-- __--xml_file__ or __-f__
-- __--output_cycle_file__ or __-ocf__
-- __--output_graph_file__ or __-ogf__
+- __--xml_file__ or __-xml__
+- __--json_component_file__ or __-json__
+- __--svg_graph_file__ or __-svg__
 
 
 ```bash
