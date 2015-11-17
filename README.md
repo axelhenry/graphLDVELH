@@ -33,7 +33,7 @@ This script takes 3 arguments:
 
 
 ```bash
-./launcher4XmlFile.py -f /path/to/xml_file -svg /path/to/svg/graph/file -json /path/to/json/component/file
+./launcher4XmlFile.py -xml /path/to/xml_file -svg /path/to/svg/graph/file -json /path/to/json/component/file
 ```
 
 
